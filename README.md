@@ -1,5 +1,9 @@
-# AlphaGrabApp
-
+<p align="center">
+  <img width="128" align="center" src="Assets/icon.png">
+</p>
+<h1 align="center">
+  Alpha Grab
+</h1>
 A macOS system tray application for interactive text extraction from screenshots using OCR technology.
 
 ## Overview
