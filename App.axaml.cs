@@ -1,5 +1,4 @@
-using System;
-using System.Diagnostics;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -42,7 +41,7 @@ public class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private static NativeMenuItem GetGrabTextMenuItem()
+    private NativeMenuItem GetGrabTextMenuItem()
     {
         var grabItem = new NativeMenuItem { Header = "Grab Text" };
         grabItem.Click += async (_, __) =>
@@ -53,28 +52,20 @@ public class App : Application
                 return;
 
             var text = await TextExtractor.ExtractTextFromScreenshotAsync(screenshotPath);
+
             if (text != null)
             {
-                await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+                await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
                 {
-                    var msgBox = new Window
-                    {
-                        Title = "Extracted Text",
-                        Width = 1000,
-                        Height = 300,
-                        Content = new TextBox
-                        {
-                            Text = text,
-                            IsReadOnly = true,
-                            AcceptsReturn = true
-                        }
-                    };
-                    msgBox.Show();
+                    var toast = new Toast(text);
+                    toast.Show();
+                    await Task.Delay(5000).ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(() => toast.Close()));
                 });
             }
 
             await Screenshotter.DeleteTempScreenshotAsync(screenshotPath);
         };
+        
         return grabItem;
     }
 }
