@@ -10,8 +10,7 @@ A macOS system tray application for interactive text extraction from screenshots
 
 AlphaGrabApp runs silently in your system tray and allows you to capture screenshots and extract text from them with a simple click. Built with Avalonia UI and .NET 9.0, it provides a lightweight and efficient solution for screenshot-based text extraction.
 
-<img width="454" height="220" alt="image" src="https://github.com/user-attachments/assets/60ecf808-197b-47cb-9cc8-c6402f70b655" />
-
+<img width="167" height="113" alt="image" src="https://github.com/user-attachments/assets/b047d93a-9c12-4cf9-9c44-a441cf8a70c0" />
 
 ## Features
 
