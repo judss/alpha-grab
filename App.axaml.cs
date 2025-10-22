@@ -59,7 +59,6 @@ public class App : Application
                 {
                     var toast = new Toast(text);
                     toast.Show();
-                    await Task.Delay(5000).ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(() => toast.Close()));
                 });
             }
 
