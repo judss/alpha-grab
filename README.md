@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="128" align="center" src="AlphaGrabApp/Assets/icon.png">
+  <img width="128" align="center" src="/assets/icon.png">
 </p>
 <h1 align="center">
   Alpha Grab

@@ -24,7 +24,7 @@ public class App : Application
 
             _trayIcon = new TrayIcon
             {
-                Icon = new WindowIcon("Assets/icon.png"),
+                Icon = new WindowIcon("resources/images/icon.png"),
                 Menu = new NativeMenu
                 {
                     Items =

@@ -16,7 +16,7 @@ public class Toast : Window
         TransparencyLevelHint = [WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.Transparent];
         Background = Brushes.BlueViolet;
         Topmost = true;
-        Icon = new WindowIcon("Assets/icon.png");
+        Icon = new WindowIcon("resources/images/icon.png");
         Title = "Alpha Grab";
 
         PointerPressed += OnWindowClick;
@@ -43,7 +43,7 @@ public class Toast : Window
             Width = width,
             Height = height,
             Title = "Alpha Grab",
-            Icon = new WindowIcon("Assets/icon.png"),
+            Icon = new WindowIcon("resources/images/icon.png"),
             Background = Brushes.BlueViolet,
             Content = new TextBox
             {
