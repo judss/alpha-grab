@@ -14,7 +14,7 @@ public static class TextExtractor
         if (!File.Exists(tempScreenshotPath))
             throw new FileNotFoundException("Screenshot file not found", tempScreenshotPath);
 
-        // OCR not yet implemented — returns empty string
+        // OCR not yet implemented — returns dummy string
         return Task.FromResult("Testing OCR functionality. This is a placeholder text.");
     }
 }
