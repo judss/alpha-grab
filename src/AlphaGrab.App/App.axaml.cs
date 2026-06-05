@@ -1,7 +1,10 @@
+using System;
+using System.IO;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input.Platform;
 using Avalonia.Markup.Xaml;
 using ReactiveUI;
 
@@ -9,6 +12,9 @@ namespace AlphaGrabApp;
 
 public class App : Application
 {
+    internal static readonly string IconPath =
+        Path.Combine(AppContext.BaseDirectory, "resources", "images", "icon.png");
+
     private TrayIcon? _trayIcon;
 
     public override void Initialize()
@@ -24,7 +30,8 @@ public class App : Application
 
             _trayIcon = new TrayIcon
             {
-                Icon = new WindowIcon("resources/images/icon.png"),
+                Icon = new WindowIcon(IconPath),
+                ToolTipText = "Alpha Grab",
                 Menu = new NativeMenu
                 {
                     Items =
@@ -47,24 +54,45 @@ public class App : Application
         grabItem.Click += async (_, __) =>
         {
             var screenshotPath = Screenshotter.CaptureInteractiveToTempFile();
-
             if (screenshotPath == null)
-                return;
+                return; // user cancelled — do nothing
 
-            var text = await TextExtractor.ExtractTextFromScreenshotAsync(screenshotPath);
+            if (_trayIcon != null) _trayIcon.ToolTipText = "Extracting text…";
 
-            if (text != null)
+            try
             {
+                var text = await TextExtractor.ExtractTextFromScreenshotAsync(screenshotPath);
+
                 await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
                 {
                     var toast = new Toast(text);
                     toast.Show();
+
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        var clipboard = TopLevel.GetTopLevel(toast)?.Clipboard;
+                        if (clipboard != null)
+                            await clipboard.SetTextAsync(text);
+                    }
                 });
             }
-
-            await Screenshotter.DeleteTempScreenshotAsync(screenshotPath);
+            catch (Exception ex)
+            {
+                var inner = ex;
+                while (inner.InnerException != null) inner = inner.InnerException;
+                await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    var toast = new Toast($"Could not extract text: {inner.GetType().Name}: {inner.Message}");
+                    toast.Show();
+                });
+            }
+            finally
+            {
+                if (_trayIcon != null) _trayIcon.ToolTipText = "Alpha Grab";
+                await Screenshotter.DeleteTempScreenshotAsync(screenshotPath);
+            }
         };
-        
+
         return grabItem;
     }
 }
